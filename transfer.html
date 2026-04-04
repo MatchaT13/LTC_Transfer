@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>BrightCare| Book Appointment</title>
+
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+   <!-- Bootstrap Icons -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+
+   <link rel="stylesheet" href="style.css">
+
+   <style>
+      /*Footer background*/
+      footer {
+        background-color: #e0f2eb;
+    }
+
+
+    .footer-icon {
+        font-size: 1.5rem;
+        color: #008950;
+        margin-right: 15px;
+    }
+
+
+    .footer-icon:hover {
+        color: #004d29;
+    }
+
+       main {
+           padding-top: 2rem;
+           padding-bottom: 2rem;
+       }
+
+       .input-light {
+           background-color: #E9E8E8;
+           border: 1px solid #ccc;
+       }
+
+       .btn-grey {
+           background-color: #C1C6CA;
+           color: #000;
+           border: none;
+           padding: 0.5rem 1.5rem;
+           border-radius: 4px;
+           font-weight: 500;
+       }
+
+       .btn-grey:hover {
+           background-color: #b1b6bb;
+       }
+
+       .btn-select {
+           background-color: #C1C6CA;
+           border: none;
+           border-radius: 4px;
+           padding: 0.75rem 1rem;
+           width: 100%;
+           text-align: left;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+
+       .btn-select span.chevron {
+           font-size: 1.2rem;
+       }
+
+       .select-menu {
+           border-radius: 4px;
+           border: 1px solid #ccc;
+           margin-top: 0.25rem;
+           background-color: #ffffff;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+           display: none;
+       }
+
+       .select-menu button {
+           width: 100%;
+           border: none;
+           background: #ffffff;
+           padding: 0.5rem 0.75rem;
+           text-align: left;
+       }
+
+       .select-menu button:hover {
+           background: #E0F2F1;
+       }
+
+       .time-column-title {
+           font-weight: 600;
+           margin-bottom: 0.25rem;
+       }
+
+       .modal-overlay {
+           position: fixed;
+           inset: 0;
+           background: rgba(0, 0, 0, 0.35);
+           display: none;
+           align-items: center;
+           justify-content: center;
+           z-index: 1050;
+       }
+
+       .modal-overlay.open {
+           display: flex;
+       }
+
+       .modal-card {
+           background-color: #ffffff;
+           max-width: 520px;
+           width: 95%;
+           border-radius: 6px;
+           box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+           padding: 2rem;
+       }
+
+       .modal-title-custom {
+           font-size: 1.6rem;
+           font-weight: 700;
+           text-align: center;
+           margin-bottom: 1.5rem;
+       }
+
+       .modal-label {
+           font-weight: 600;
+           margin-right: 0.75rem;
+       }
+
+
+
+       body {
+        font-family: Arial;
+        background: #f4f6f8;
+    }
+    .contain {
+        width: 750px;
+        margin: 40px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+    }
+    button {
+        padding: 6px 10px;
+        margin: 2px;
+        cursor: pointer;
+    }
+    .accept {
+        background: green;
+        color: white;
+        border: none;
+    }
+    .reject {
+        background: red;
+        color: white;
+        border: none;
+    }
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    .status {
+        margin-top: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+   </style>
+</head>
+<body>
+
+   <!--Nav bar-->
+   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#008940;">
+       <div class="container">
+
+           <!-- Brand -->
+           <a class="navbar-brand fw-bold">LTC Transfer</a>
+
+           <!-- Mobile-only links (without JS and BootStraop) -->
+           <a class="navbar-toggler text-lightgrey" href="index.html" style="text-decoration:none; background: none; box-shadow: none; border: none;">Home</a>
+           <ul class="navbar-nav ms-auto">
+               <li class="nav-item">
+                   <a href="<%=request.getContextPath()%>/logout">Logout</a>
+               </li>
+           </ul>
+
+           <!-- Desktop version -->
+           <div class="collapse navbar-collapse show">
+               <ul class="navbar-nav ms-auto align-items-center">
+
+                   <li class="nav-item d-none d-lg-block">
+                       <a class="nav-link" style="text-align: center; display: inline-block;" href="home.jsp">
+                        <i class="bi bi-house-fill fs-3" style="display: block;"></i>
+                        Home
+                       </a>
+                   </li>
+
+                </li>
+               </ul>
+           </div>
+
+       </div>
+   </nav>
+   <!--End of NavBar-->
+
+   <main>
+    <body>
+
+        <div class="contain">
+            <h2>LTC Transfer Request System</h2>
+        
+            <form id="form">
+                <label>Resident Name</label>
+                <input type="text" id="resident" required>
+        
+                <label>Preferred Location</label>
+                <input type="text" id="location" placeholder="e.g. Toronto" required>
+        
+                <label>Care Type Needed</label>
+                <select id="care">
+                    <option value="basic">Basic</option>
+                    <option value="dementia">Dementia</option>
+                    <option value="high">High Care</option>
+                </select>
+        
+                <label>Priority</label>
+                <select id="priority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+        
+                <button type="submit">Find Matches</button>
+            </form>
+        
+            <table id="results">
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>Location</th>
+                        <th>Care</th>
+                        <th>Beds</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        
+            <div class="status" id="status"></div>
+        
+            <h3>Submitted Requests</h3>
+            <table id="requestsTable">
+                <thead>
+                    <tr>
+                        <th>Resident</th>
+                        <th>Facility</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <script>
+        
+        // Facility dataset
+        let facilities = [
+            {name: "Maple Care Home", location: "Toronto", care: "basic", beds: 2},
+            {name: "Sunrise Seniors", location: "Toronto", care: "dementia", beds: 1},
+            {name: "Green Valley LTC", location: "Ottawa", care: "high", beds: 3},
+            {name: "Lakeside Home", location: "Toronto", care: "high", beds: 1},
+            {name: "Peaceful Living", location: "Montreal", care: "basic", beds: 0}
+        ];
+        
+        let currentMatches = [];
+        let submittedRequests = [];
+        
+        // Score calculation
+        function calculateScore(f, user) {
+            let score = 0;
+        
+            if (f.location.toLowerCase() === user.location.toLowerCase()) score += 50;
+            if (f.care === user.care) score += 40;
+            if (user.priority === "high") score += 10;
+        
+            score += f.beds * 5;
+        
+            return score;
+        }
+        
+        // Render facility table
+        function renderTable() {
+            let table = document.querySelector("#results tbody");
+            table.innerHTML = "";
+        
+            currentMatches.forEach((f, index) => {
+                let row = `<tr>
+                    <td>${f.name}</td>
+                    <td>${f.location}</td>
+                    <td>${f.care}</td>
+                    <td>${f.beds}</td>
+                    <td>${f.score}</td>
+                    <td>
+                        <button class="accept" onclick="acceptFacility(${index})">Accept</button>
+                        <button class="reject" onclick="rejectFacility(${index})">Reject</button>
+                    </td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        
+            if (currentMatches.length === 0) {
+                table.innerHTML = "<tr><td colspan='6'>No more options available</td></tr>";
+            }
+        }
+        
+        // Render submitted requests
+        function renderRequests() {
+            let table = document.querySelector("#requestsTable tbody");
+            table.innerHTML = "";
+        
+            submittedRequests.forEach(r => {
+                let row = `<tr>
+                    <td>${r.resident}</td>
+                    <td>${r.facility}</td>
+                    <td>${r.status}</td>
+                    <td>${r.timestamp}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        }
+        
+        // Accept facility → submit request
+        function acceptFacility(index) {
+            let selected = currentMatches[index];
+        
+            let request = {
+                resident: document.getElementById("resident").value,
+                facility: selected.name,
+                status: "Pending Approval",
+                timestamp: new Date().toLocaleString()
+            };
+        
+            submittedRequests.push(request);
+        
+            document.getElementById("status").innerHTML =
+                `✅ Request sent to <b>${selected.name}</b> (Pending Approval)`;
+        
+            currentMatches = [];
+            renderTable();
+            renderRequests();
+        }
+        
+        // Reject facility
+        function rejectFacility(index) {
+            currentMatches.splice(index, 1);
+        
+            document.getElementById("status").innerText =
+                "❌ Facility rejected. Showing next best option.";
+        
+            renderTable();
+        }
+        
+        // Handle form submit
+        document.getElementById("form").addEventListener("submit", function(e){
+            e.preventDefault();
+        
+            let user = {
+                location: document.getElementById("location").value,
+                care: document.getElementById("care").value,
+                priority: document.getElementById("priority").value
+            };
+        
+            // Filter by available beds
+            let available = facilities.filter(f => f.beds > 0);
+        
+            // Rank facilities
+            currentMatches = available.map(f => ({
+                ...f,
+                score: calculateScore(f, user)
+            }));
+        
+            currentMatches.sort((a,b) => b.score - a.score);
+        
+            document.getElementById("status").innerText = "";
+        
+            renderTable();
+        });
+        
+        </script>
+        
+        </body>
+        
+   </main>
+
+   <!-- Review & Confirm pop-up -->
+   <div class="modal-overlay" id="reviewModal">
+       <div class="modal-card">
+           <div class="modal-title-custom">Review &amp; Confirm</div>
+
+           <div class="mb-2">
+               <span class="modal-label">Patient’s Name:</span>
+               <span id="revPatientName">Karen, Typical</span>
+           </div>
+           <div class="mb-2">
+               <span class="modal-label">Date of Birth:</span>
+               <span id="revDob">May, 23, 1986</span>
+           </div>
+           <div class="mb-2">
+               <span class="modal-label">Dental Service:</span>
+               <span id="revService">Regular Check Up</span>
+           </div>
+           <div class="mb-2">
+               <span class="modal-label">Preferred Date &amp; Time:</span>
+               <span id="revDateTime">Dec 23, 2025 | 11:00 am</span>
+           </div>
+           <div class="mb-4">
+               <span class="modal-label">Doctor’s Name:</span>
+               <span id="revDentist">Dr. Sarah Thompson</span>
+           </div>
+
+           <div class="d-flex justify-content-center gap-3">
+
+    <form method="post" action="<%=request.getContextPath()%>/bookAppointment">
+        <input type="hidden" name="service" id="formService">
+        <input type="hidden" name="dentist" id="formDentist">
+        <input type="hidden" name="date" id="formDate">
+        <input type="hidden" name="time" id="formTime">
+        <button type="submit" class="btn-grey">Confirm Appointment</button>
+    </form>
+
+    <button type="button" class="btn-grey" id="changeSelectionBtn">Change Selection</button>
+
+</div>
+       </div>
+   </div>
+
+<!--Footer-->
+<footer class="mt-5 py-4">
+    <div class="container text-left">
+
+        <!-- Social Icons -->
+        <div class="mb-3">
+            <a href="#" class="footer-icon"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="footer-icon"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="footer-icon"><i class="bi bi-linkedin"></i></a>
+        </div>
+
+        <!-- Privacy / Address -->
+        <p class="mb-1, text-left"><a href="#" class="text-dark text-decoration-underline">Privacy Policy</a></p>
+        <p class="mb-1, text-left">3500 Matcha Ave West,<br>
+            MatchaLand, M2A 3T4</p>
+
+        <!-- Copyright -->
+        <p class="mb-0, text-center">&copy; 2025 LTC Transfer. All Rights Reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
+   <script>
+       // Simple “dropdown” functionality for service & dentist
+       const serviceButton = document.getElementById('serviceButton');
+       const serviceMenu   = document.getElementById('serviceMenu');
+       const serviceLabel  = document.getElementById('serviceLabel');
+
+       const dentistButton = document.getElementById('dentistButton');
+       const dentistMenu   = document.getElementById('dentistMenu');
+       const dentistLabel  = document.getElementById('dentistLabel');
+
+       let selectedService = '';
+       let selectedDentist = '';
+
+       serviceButton.addEventListener('click', () => {
+           serviceMenu.style.display = serviceMenu.style.display === 'block' ? 'none' : 'block';
+           dentistMenu.style.display = 'none';
+       });
+
+       dentistButton.addEventListener('click', () => {
+           dentistMenu.style.display = dentistMenu.style.display === 'block' ? 'none' : 'block';
+           serviceMenu.style.display = 'none';
+       });
+
+       serviceMenu.querySelectorAll('button').forEach(btn => {
+           btn.addEventListener('click', () => {
+               selectedService = btn.getAttribute('data-value');
+               serviceLabel.textContent = selectedService;
+               serviceMenu.style.display = 'none';
+           });
+       });
+
+       dentistMenu.querySelectorAll('button').forEach(btn => {
+           btn.addEventListener('click', () => {
+               selectedDentist = btn.getAttribute('data-value');
+               dentistLabel.textContent = selectedDentist;
+               dentistMenu.style.display = 'none';
+           });
+       });
+
+       // Close menus if clicking outside
+       document.addEventListener('click', (e) => {
+           if (!serviceButton.contains(e.target) && !serviceMenu.contains(e.target)) {
+               serviceMenu.style.display = 'none';
+           }
+           if (!dentistButton.contains(e.target) && !dentistMenu.contains(e.target)) {
+               dentistMenu.style.display = 'none';
+           }
+       });
+
+       // Time + popup logic
+       const reviewBtn = document.getElementById('reviewBtn');
+       const cancelBtn = document.getElementById('cancelBtn');
+       const reviewModal = document.getElementById('reviewModal');
+       const changeSelectionBtn = document.getElementById('changeSelectionBtn');
+       const confirmBtn = document.getElementById('confirmAppointmentBtn');
+
+       const dateInput = document.getElementById('appointmentDate');
+       const timeRadios = document.querySelectorAll('input[name="timeRadio"]');
+
+       function getSelectedTime() {
+           let time = '';
+           timeRadios.forEach(r => {
+               if (r.checked) time = r.value;
+           });
+           return time;
+       }
+
+       reviewBtn.addEventListener('click', () => {
+
+    	    if (!selectedService) {
+    	        alert('Please select a service.');
+    	        return;
+    	    }
+
+    	    if (!selectedDentist) {
+    	        alert('Please select a dentist.');
+    	        return;
+    	    }
+
+    	    const date = dateInput.value;
+    	    const time = getSelectedTime();
+
+    	    document.getElementById('revService').textContent = selectedService;
+    	    document.getElementById('revDentist').textContent = selectedDentist;
+    	    document.getElementById('revDateTime').textContent = date + ' | ' + time;
+
+    	    // ADD THESE LINES
+    	    document.getElementById('formService').value = selectedService;
+    	    document.getElementById('formDentist').value = selectedDentist;
+    	    document.getElementById('formDate').value = date;
+    	    document.getElementById('formTime').value = time;
+
+    	    reviewModal.classList.add('open');
+    	});
+
+       changeSelectionBtn.addEventListener('click', () => {
+           reviewModal.classList.remove('open');
+       });
+
+       
+       cancelBtn.addEventListener('click', () => {
+           dateInput.value = '';
+           timeRadios.forEach(r => r.checked = false);
+           // keep service/dentist as is; or reset if you want:
+           // selectedService = ''; selectedDentist = '';
+       });
+
+       reviewModal.addEventListener('click', (e) => {
+           if (e.target === reviewModal) {
+               reviewModal.classList.remove('open');
+           }
+       });
+   </script>
+
+</body>
+</html>
