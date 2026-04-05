@@ -35,16 +35,13 @@ http://localhost:8080/h2-console
 
 Use the following settings:
 
-Driver Class: org.h2.Driver
-JDBC URL: jdbc:h2:mem:ltcdb
-Username: sa
-Password: (leave blank)
+-Driver Class: org.h2.Driver
+-JDBC URL: jdbc:h2:mem:ltcdb
+-Username: sa
+-Password: (leave blank)
 
 Click Connect.
 
-Viewing Data
-
-After connecting, you can run:
 
 
 Important Notes: This is a prototype system for demonstration purposes
@@ -66,7 +63,7 @@ the JDBC URL is exactly: jdbc:h2:mem:ltcdb
 Repository
 
 
-Authors: Hibaq Ahme, Rasmandeep Dhillon, Brian Tran, Divine Consille Dikoka
+Authors: Hibaq Ahmed, Rasmandeep Dhillon, Brian Tran, Divine Consille Dikoka
 
 (Insert team member names here)
 
