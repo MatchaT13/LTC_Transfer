@@ -14,8 +14,8 @@ H2 Database (in-memory)
 Open the project folder (the one containing pom.xml) in VS Code or IntelliJ.
 Open a terminal in that folder.
 Run the following commands:
-mvn install
-mvn spring-boot:run
+mvn install.
+mvn spring-boot:run.
 Once the application starts, open your browser and go to:
 
 http://localhost:8080/login
