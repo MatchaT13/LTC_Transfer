@@ -14,8 +14,13 @@ H2 Database (in-memory)
 Open the project folder (the one containing pom.xml) in VS Code or IntelliJ.
 Open a terminal in that folder.
 Run the following commands:
-1.mvn install
-and 2.mvn spring-boot:run. One after the other.
+
+'''bash
+
+mvn install.
+
+
+mvn spring-boot:run
 
 
 
@@ -39,9 +44,14 @@ http://localhost:8080/h2-console
 Use the following settings:
 
 -Driver Class: org.h2.Driver
--JDBC URL: jdbc:h2:mem:ltcdb
--Username: sa
--Password: (leave blank)
+-JDBC URL: jdbc:h2:mem:ltcdb.
+
+
+-Username: sa.
+
+
+-Password: (leave blank).
+
 
 Click Connect.
 
