@@ -64,7 +64,11 @@ Once you access the h2-console it is very importsnt you insert your own data val
 During the presentation, we should have the data we will be running in the google slides, so that we can copy paste it into the h2-console. 
 
 
-Here is an example of the data we can put in the login page that we could put in the h2-console (For reference if you go to the models folder in the VS Code , you will find i put each class and their attributes in there. The models folder defines the structure of the database):
+
+
+Here is an example of the data we can put in the login page but first we have to put this in the h2-console and make sure the terminal is stiil running (For reference if you go to the models folder in the VS Code , you will find i put each class and their attributes in there. The models folder defines the structure of the database):
+
+
 
 
 INSERT INTO USERS (email, password, name, role, created_at)
