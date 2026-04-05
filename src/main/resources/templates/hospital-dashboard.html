@@ -4,17 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LTC Transfer | Hospital Dashboard</title>
-    <!-- Bootstrap CSS -->
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
-    <!-- Bootstrap Icons -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+
     <style>
       body {
         background-color: #f8f9fa;
@@ -66,11 +65,6 @@
       .footer-icon:hover {
         color: #004d29;
       }
-      .status-badge {
-        font: size 0.9rem;
-        padding: 6px 10px;
-        border-radius: 8px;
-      }
       .table thead {
         background-color: #008952;
         color: white;
@@ -78,7 +72,6 @@
     </style>
   </head>
   <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
       <div class="container">
         <a class="navbar-brand fw-bold" href="#">LTC Transfer</a>
@@ -103,9 +96,7 @@
       </div>
     </nav>
 
-    <!-- Main content -->
     <div class="container">
-      <!-- Welcome Section -->
       <div class="dashboard-header">
         <h2 class="dashboard-title">Hospital Dashboard</h2>
         <p class="mb-0">
@@ -114,7 +105,6 @@
         </p>
       </div>
 
-      <!-- Filter Section -->
       <div class="filter-box mt-4">
         <h5 class="mb-3">Filter LTC Facilities</h5>
 
@@ -155,14 +145,11 @@
 
           <div class="col-12">
             <button type="submit" class="btn btn-green">Apply Filter</button>
-
-            <!--This is pointing to my backend route-->
             <a href="/hospital/dashboard" class="btn btn-secondary">Reset</a>
           </div>
         </form>
       </div>
 
-      <!-- LTC Facilities Table -->
       <div class="card card-custom mt-4">
         <div class="card-body">
           <h4 class="mb-3">LTC Facility Availability</h4>
@@ -173,76 +160,28 @@
                 <th>Facility Name</th>
                 <th>Location</th>
                 <th>Available Beds</th>
-                <th>Bed Type</th>
-                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Example static rows -->
-              <tr>
-                <td>Sunny Meadows LTC</td>
-                <td>Toronto</td>
-                <td>4</td>
-                <td>Private</td>
+              <tr th:each="facility : ${facilities}">
+                <td th:text="${facility.name}"></td>
+                <td th:text="${facility.location}"></td>
+                <td th:text="${facility.availableBeds}"></td>
                 <td>
-                  <span class="badge bg-success status-badge">Available</span>
-                </td>
-                <td>
-                  <a href="/hospital/transfer-form" class="btn btn-sm btn-green"
-                    >Submit Transfer</a
+                  <a
+                    th:href="@{/hospital/transfer-form(facilityId=${facility.id})}"
+                    class="btn btn-sm btn-green"
                   >
+                    Submit Transfer
+                  </a>
                 </td>
               </tr>
-              <tr>
-                <td>Green Oaks Care Home</td>
-                <td>Vaughan</td>
-                <td>2</td>
-                <td>Semi-Private</td>
-                <td>
-                  <span class="badge bg-warning text-dark status-badge"
-                    >Limited</span
-                  >
-                </td>
-                <td>
-                  <a href="/hospital/transfer-form" class="btn btn-sm btn-green"
-                    >Submit Transfer</a
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Maple Grove LTC</td>
-                <td>Markham</td>
-                <td>0</td>
-                <td>Specialized</td>
-                <td><span class="badge bg-danger status-badge">Full</span></td>
-                <td>
-                  <button class="btn btn-sm btn-secondary" disabled>
-                    Unavailable
-                  </button>
-                </td>
-              </tr>
-
-              <!-- Uncomment this later :
-                        <tr th:each="facility : ${facilities}">
-                            <td th:text="${facility.name}"></td>
-                            <td th:text="${facility.location}"></td>
-                            <td th:text="${facility.availableBeds}"></td>
-                            <td th:text="${facility.bedType}"></td>
-                            <td>
-                                <span class="badge bg-success" th:text="${facility.status}"></span>
-                            </td>
-                            <td>
-                                <a th:href="@{/hospital/transfer-form(facilityId=${facility.id})}" class="btn btn-sm btn-green">Submit Transfer</a>
-                            </td>
-                        </tr>
-                        -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Transfer Requests Section -->
       <div class="card card-custom mt-4">
         <div class="card-body">
           <h4 class="mb-3">Recent Transfer Requests</h4>
@@ -258,52 +197,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>TR-001</td>
-                <td>John Doe</td>
-                <td>Sunny Meadows LTC</td>
-                <td>
-                  <span class="badge bg-warning text-dark status-badge"
-                    >Pending</span
-                  >
-                </td>
-                <td>2026-04-02</td>
+              <tr th:each="request : ${requests}">
+                <td th:text="${request.id}"></td>
+                <td th:text="${request.patientName}"></td>
+                <td th:text="${request.facility.name}"></td>
+                <td th:text="${request.status}"></td>
+                <td th:text="${request.createdAt}"></td>
               </tr>
-              <tr>
-                <td>TR-002</td>
-                <td>Mary Smith</td>
-                <td>Green Oaks Care Home</td>
-                <td>
-                  <span class="badge bg-success status-badge">Accepted</span>
-                </td>
-                <td>2026-04-01</td>
-              </tr>
-              <tr>
-                <td>TR-003</td>
-                <td>Ahmed Ali</td>
-                <td>Maple Grove LTC</td>
-                <td>
-                  <span class="badge bg-danger status-badge">Declined</span>
-                </td>
-                <td>2026-03-31</td>
-              </tr>
-
-              <!-- i will uncomment this when my database and controller are working later on??? it will send the data to my html later:
-                        <tr th:each="request : ${requests}">
-                            <td th:text="${request.id}"></td>
-                            <td th:text="${request.patientName}"></td>
-                            <td th:text="${request.facility.name}"></td>
-                            <td th:text="${request.status}"></td>
-                            <td th:text="${request.transferTimestamp}"></td>
-                        </tr>
-                        -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="py-4">
       <div class="container text-left">
         <div class="mb-3">
@@ -311,8 +217,6 @@
           <a href="#" class="footer-icon"><i class="bi bi-instagram"></i></a>
           <a href="#" class="footer-icon"><i class="bi bi-linkedin"></i></a>
         </div>
-
-        <!-- Privacy / Address -->
 
         <p class="mb-1">
           <a href="#" class="text-dark text-decoration-underline"
@@ -331,3 +235,4 @@
     </footer>
   </body>
 </html>
+6. Also correct your

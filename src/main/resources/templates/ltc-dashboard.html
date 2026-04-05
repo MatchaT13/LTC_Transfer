@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LTC Transfer | Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      footer {
+        background-color: #e0f2eb;
+      }
+      .text-available {
+        color: #198754;
+        font-weight: bold;
+      }
+      .text-limited {
+        color: #fd7e14;
+        font-weight: bold;
+      }
+      .text-full {
+        color: #dc3545;
+        font-weight: bold;
+      }
+      .table th {
+        border-top: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      style="background-color: #008940"
+    >
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">LTC Transfer</a>
+        <div class="collapse navbar-collapse show">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/ltc/dashboard">LTC Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/ltc/requests">Transfer Requests</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/ltc/bed-management">Bed Management</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">LTC Facility Dashboard</h2>
+            <div class="d-flex gap-2">
+              <a href="/ltc/requests" class="btn btn-primary"
+                >View Transfer Requests</a
+              >
+              <a href="/ltc/bed-management" class="btn btn-secondary"
+                >Bed Management</a
+              >
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <div class="p-3 border rounded text-center">
+                <div class="text-muted small text-uppercase">
+                  Total Capacity
+                </div>
+                <h3 class="fw-bold mb-0" th:text="${totalBeds}">0</h3>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 border rounded text-center">
+                <div class="text-muted small text-uppercase">Total Vacant</div>
+                <h3 class="fw-bold mb-0 text-success" th:text="${vacantBeds}">
+                  0
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          <h5 class="mb-3">Bed Availability</h5>
+          <div class="table-responsive mb-5">
+            <table class="table table-bordered align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Bed Number</th>
+                  <th>Bed Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${beds == null or #lists.isEmpty(beds)}">
+                  <td colspan="3" class="text-center">
+                    No bed data available.
+                  </td>
+                </tr>
+
+                <tr th:each="bed : ${beds}">
+                  <td th:text="${bed.bedNumber}">B-101</td>
+                  <td th:text="${bed.bedType}">Private</td>
+                  <td>
+                    <span th:if="${!bed.occupied}" class="text-available"
+                      >Available</span
+                    >
+                    <span th:if="${bed.occupied}" class="text-full"
+                      >Occupied</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card mb-4">
+            <div
+              class="card-header text-white"
+              style="background-color: #008940"
+            >
+              <h5 class="mb-0 fw-bold">Pending Transfer Requests</h5>
+            </div>
+            <div class="card-body">
+              <div
+                th:if="${pendingRequests == null or #lists.isEmpty(pendingRequests)}"
+              >
+                <p class="mb-0">No pending transfer requests.</p>
+              </div>
+
+              <div
+                th:if="${pendingRequests != null and !#lists.isEmpty(pendingRequests)}"
+              >
+                <table class="table table-bordered align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Request ID</th>
+                      <th>Patient Name</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="request : ${pendingRequests}">
+                      <td th:text="${request.id}">1</td>
+                      <td th:text="${request.patientName}">John Doe</td>
+                      <td th:text="${request.status}">pending</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-5">
+            <div
+              class="card-header text-white"
+              style="background-color: #008940"
+            >
+              <h5 class="mb-0 fw-bold">Discharge Patient</h5>
+            </div>
+            <div class="card-body">
+              <form action="/ltc/discharge" method="POST">
+                <div class="row g-3">
+                  <div class="col-md-9">
+                    <label for="bedId" class="form-label fw-bold">Bed ID</label>
+                    <input
+                      type="number"
+                      id="bedId"
+                      name="bedId"
+                      class="form-control"
+                      placeholder="Enter Bed ID"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-danger w-100">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-5 py-4">
+      <div class="container">
+        <div class="row text-center text-md-start">
+          <div class="col-md-6">
+            <p class="mb-1">
+              <a href="#" class="text-dark text-decoration-underline"
+                >Privacy Policy</a
+              >
+            </p>
+            <p class="mb-1 small">3500 Matcha Ave West, MatchaLand</p>
+          </div>
+          <div class="col-md-6 text-md-end align-self-end">
+            <p class="mb-0 small text-muted">
+              &copy; 2026 LTC Transfer. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
