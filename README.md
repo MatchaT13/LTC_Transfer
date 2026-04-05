@@ -16,3 +16,4 @@ Spring Boot prototype for hospital-to-LTC transfer management.
 ```bash
 mvn install
 mvn spring-boot:run
+  When done open up in you local browse: http://localhost:8080/login
