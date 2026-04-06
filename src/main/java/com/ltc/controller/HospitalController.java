@@ -54,41 +54,63 @@ public class HospitalController {
     }
 
     @GetMapping("/hospital/filter")
-    public String filterFacilities(@RequestParam(required = false) String facilityName,
-                                    @RequestParam(required = false) String bedType,
-                                    @RequestParam(required = false) String availability,
-                                    Model model,
-                                    HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) return "redirect:/login";
-        
-        List<LTCFacility> facilities = facilityRepository.findAll();
-        
-        // Filter by name
-        if (facilityName != null && !facilityName.isEmpty()) {
-            facilities = facilities.stream()
-                    .filter(f -> f.getName().toLowerCase().contains(facilityName.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
-        
-        // Calculate available beds
-        for (LTCFacility facility : facilities) {
-            long available = bedRepository.countByFacilityAndIsOccupiedFalse(facility);
-            facility.setAvailableBeds((int) available);
-        }
-        
-        // Filter by availability
-        if ("Available".equals(availability)) {
-            facilities = facilities.stream()
-                    .filter(f -> f.getAvailableBeds() > 0)
-                    .collect(Collectors.toList());
-        }
-        
-        model.addAttribute("facilities", facilities);
-        model.addAttribute("requests", transferRepository.findByRequestedBy(userRepository.findById(userId).get()));
-        
-        return "hospital-dashboard";
+public String filterFacilities(@RequestParam(required = false) String facilityName,
+                                @RequestParam(required = false) String bedType,
+                                @RequestParam(required = false) String availability,
+                                Model model,
+                                HttpSession session) {
+    
+    Long userId = (Long) session.getAttribute("userId");
+    if (userId == null) return "redirect:/login";
+    
+    List<LTCFacility> facilities = facilityRepository.findAll();
+
+    //  Filter by facility name
+    if (facilityName != null && !facilityName.isEmpty()) {
+        facilities = facilities.stream()
+                .filter(f -> f.getName().toLowerCase().contains(facilityName.toLowerCase()))
+                .collect(Collectors.toList());
     }
+
+    //  Filter by bed type
+    if (bedType != null && !bedType.isEmpty()) {
+
+        // Get beds matching type (only available ones)
+        List<Bed> beds = bedRepository.findByBedTypeAndIsOccupiedFalse(bedType);
+
+        // Extract facilities that have those beds
+        List<LTCFacility> facilitiesWithBedType = beds.stream()
+                .map(Bed::getFacility)
+                .distinct()
+                .collect(Collectors.toList());
+
+        facilities = facilities.stream()
+                .filter(facilitiesWithBedType::contains)
+                .collect(Collectors.toList());
+    }
+
+    //  Calculate available beds
+    for (LTCFacility facility : facilities) {
+        long available = bedRepository.countByFacilityAndIsOccupiedFalse(facility);
+        facility.setAvailableBeds((int) available);
+    }
+
+    //  Filter by availability
+    if ("Available".equals(availability)) {
+        facilities = facilities.stream()
+                .filter(f -> f.getAvailableBeds() > 0)
+                .collect(Collectors.toList());
+    }
+
+    model.addAttribute("facilities", facilities);
+    model.addAttribute("requests", 
+        transferRepository.findByRequestedBy(
+            userRepository.findById(userId).orElse(null)
+        )
+    );
+
+    return "hospital-dashboard";
+}
 
     @GetMapping("/hospital/transfer-form")
     public String showTransferForm(@RequestParam(required = false) Long facilityId,
