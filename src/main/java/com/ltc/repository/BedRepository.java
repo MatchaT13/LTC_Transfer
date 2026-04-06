@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface BedRepository extends JpaRepository<Bed, Long> {
     List<Bed> findByFacility(LTCFacility facility);
+    List<Bed> findByBedTypeAndIsOccupiedFalse(String bedType);
     List<Bed> findByFacilityAndIsOccupiedFalse(LTCFacility facility);
     long countByFacilityAndIsOccupiedFalse(LTCFacility facility);
 }
